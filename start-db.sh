@@ -1,0 +1,1 @@
+mongod --dbpath='/c/users/jordi/data/db'

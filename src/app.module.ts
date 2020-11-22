@@ -9,17 +9,15 @@ import { AuthModule } from './auth/auth.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: '.development.env',
+      envFilePath: '.dev.env',
     }),
-    MongooseModule.forRoot(
-      process.env.MONGO_URI, {
-        useFindAndModify: false,
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        useCreateIndex: true,
-      }
-    ),
-    AuthModule
+    MongooseModule.forRoot(process.env.MONGO_URI, {
+      useFindAndModify: false,
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      useCreateIndex: true,
+    }),
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
