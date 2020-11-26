@@ -8,6 +8,8 @@ const port = process.env.PORT;
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.enableCors();
+
   // Added swagger to document the api
   const options = new DocumentBuilder()
     .setTitle('Misescapes')
