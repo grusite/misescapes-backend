@@ -1,6 +1,9 @@
 # env variables
 *.env
 
+# mongo db sh
+start-db.sh
+
 # compiled output
 /dist
 /node_modules

@@ -12,7 +12,7 @@ export class CompaniesService {
     @InjectModel('Companies') private companiesModel: Model<Companies>,
   ) {}
 
-  async findAll(): Promise<any> {
+  async findAll(): Promise<CompaniesDto[]> {
     return await this.companiesModel.find().exec();
   }
 

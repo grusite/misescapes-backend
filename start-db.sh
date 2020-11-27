@@ -1,1 +1,12 @@
-mongod --dbpath='/c/users/jordi/data/db'
+db.createUser(
+    {
+        user: "misescapes",
+        pwd: "JanaJana12",
+        roles: [
+            {
+                role: "readWrite",
+                db: "misescapes"
+            }
+        ]
+    }
+)
