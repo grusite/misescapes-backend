@@ -1,7 +1,9 @@
 import {
   Body,
   Controller,
+  Res,
   Get,
+  HttpStatus,
   Post,
   Request,
   UseGuards,
@@ -23,8 +25,12 @@ export class AuthController {
   @Post('/signup')
   async signUp(
     @Body(ValidationPipe) authCredentialsDto: AuthCredentialsDto,
+    @Res() res,
   ): Promise<void> {
-    return await this.authService.signUp(authCredentialsDto);
+    await this.authService.signUp(authCredentialsDto);
+    return res.status(HttpStatus.OK).json({
+      message: 'Registered OK',
+    });
   }
 
   @ApiBody({ required: true })

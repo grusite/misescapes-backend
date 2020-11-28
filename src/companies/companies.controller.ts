@@ -3,6 +3,7 @@ import {
   Controller,
   Res,
   Query,
+  Param,
   HttpStatus,
   NotFoundException,
   Get,
@@ -26,8 +27,8 @@ export class CompaniesController {
     return res.status(HttpStatus.OK).json(lists);
   }
 
-  @Get('id')
-  async findById(@Res() res, @Query('id') id: string) {
+  @Get(':id')
+  async findById(@Res() res, @Param('id') id: string) {
     const lists = await this.companiesService.findById(id);
     if (!lists) throw new NotFoundException('Id does not exist!');
     return res.status(HttpStatus.OK).json(lists);
