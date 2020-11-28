@@ -6,6 +6,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { CompaniesModule } from './companies/companies.module';
+import { GamesModule } from './games/games.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { CompaniesModule } from './companies/companies.module';
     }),
     AuthModule,
     CompaniesModule,
+    GamesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
