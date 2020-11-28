@@ -5,12 +5,13 @@ import * as bcrypt from 'bcrypt';
 import { Model } from 'mongoose';
 
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
-import { User } from './interfaces/user.interface';
+// import { User } from './interfaces/user.interface';
+import { User, UserDocument } from './schemas/user.schema';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectModel('User') private userModel: Model<User>,
+    @InjectModel(User.name) private userModel: Model<UserDocument>,
     private jwtService: JwtService,
   ) {}
 
@@ -28,14 +29,14 @@ export class AuthService {
     }
   }
 
-  async signIn(user: User) {
+  async signIn(user: UserDocument) {
     const payload = { email: user.email, sub: user._id };
     return {
       accessToken: this.jwtService.sign(payload),
     };
   }
 
-  async validateUser(email: string, pass: string): Promise<User> {
+  async validateUser(email: string, pass: string): Promise<UserDocument> {
     const user = await this.userModel.findOne({ email });
     if (!user) {
       return null;
