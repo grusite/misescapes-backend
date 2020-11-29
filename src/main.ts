@@ -16,6 +16,7 @@ async function bootstrap() {
     .setDescription('The API description')
     .setVersion('1.0')
     .addTag('Escapes')
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('api', app, document);

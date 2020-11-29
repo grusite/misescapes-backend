@@ -9,10 +9,11 @@ import {
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
-import { ApiResponse, ApiTags, ApiBody } from '@nestjs/swagger';
+import { ApiResponse, ApiTags, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
 
 import { AuthService } from './auth.service';
-import { AuthCredentialsDto } from './dto/auth-credentials.dto';
+import { AuthCreateUserDto } from './dto/authCreateUser.dto';
+import { AuthLoginUserDto } from './dto/authLoginUser.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 
@@ -24,16 +25,16 @@ export class AuthController {
   @ApiResponse({ status: 201 })
   @Post('/signup')
   async signUp(
-    @Body(ValidationPipe) authCredentialsDto: AuthCredentialsDto,
+    @Body(ValidationPipe) authCreateUserDto: AuthCreateUserDto,
     @Res() res,
   ): Promise<void> {
-    await this.authService.signUp(authCredentialsDto);
+    await this.authService.signUp(authCreateUserDto);
     return res.status(HttpStatus.OK).json({
       message: 'Registered OK',
     });
   }
 
-  @ApiBody({ required: true })
+  @ApiBody({ type: AuthLoginUserDto })
   @UseGuards(LocalAuthGuard)
   @Post('signin')
   async signIn(@Request() req) {
@@ -41,6 +42,7 @@ export class AuthController {
   }
 
   @ApiResponse({ status: 200 })
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Get('me')
   getMe(@Request() req) {
