@@ -1,6 +1,7 @@
-import * as mongoose from 'mongoose';
+// import * as mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
-export const CompanySchema = new mongoose.Schema(
+const CompanySchema = new mongoose.Schema(
   {
     id: {
       type: String,
@@ -29,8 +30,4 @@ export const CompanySchema = new mongoose.Schema(
   { _id: true, versionKey: false },
 );
 
-CompanySchema.virtual('_games', {
-  ref: 'game',
-  localField: 'games',
-  foreignField: 'id',
-});
+module.exports = mongoose.model('company', CompanySchema);

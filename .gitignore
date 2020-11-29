@@ -3,7 +3,9 @@
 
 # mongo db
 /bin/recover/dump
-/bin/data
+/bin/recover/games
+/bin/recover/companies.json
+/bin/data/db
 
 # compiled output
 /dist

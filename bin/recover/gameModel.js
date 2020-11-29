@@ -1,6 +1,7 @@
-import * as mongoose from 'mongoose';
+// import * as mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
-export const GameSchema = new mongoose.Schema(
+const GameSchema = new mongoose.Schema(
   {
     id: {
       type: String,
@@ -23,7 +24,7 @@ export const GameSchema = new mongoose.Schema(
     isCombatMode: String,
     combatText: String,
     equalRoom: String,
-    videos: String,
+    videos: [String],
     categories: mongoose.SchemaTypes.Mixed,
     audience: mongoose.SchemaTypes.Mixed,
     themes: mongoose.SchemaTypes.Mixed,
@@ -36,9 +37,4 @@ export const GameSchema = new mongoose.Schema(
   { _id: true, versionKey: false },
 );
 
-GameSchema.virtual('_company', {
-  ref: 'company',
-  localField: 'company',
-  foreignField: 'id',
-  justOne: true,
-});
+module.exports = mongoose.model('game', GameSchema);
