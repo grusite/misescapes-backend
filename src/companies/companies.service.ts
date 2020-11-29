@@ -4,12 +4,12 @@ import { Model } from 'mongoose';
 
 import { CompanyDto } from './dto/company.dto';
 // import { CreateCompanyDto } from './dto/createCompany.dto';
-import { Company } from './interfaces/company.interface';
+import { Company, CompanyDocument } from './schemas/company.schema';
 
 @Injectable()
 export class CompaniesService {
   constructor(
-    @InjectModel('Companies') private companiesModel: Model<Company>,
+    @InjectModel(Company.name) private companiesModel: Model<CompanyDocument>,
   ) {}
 
   async findAll(): Promise<CompanyDto[]> {

@@ -1,44 +1,44 @@
-import * as mongoose from 'mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
 
-export const GameSchema = new mongoose.Schema(
-  {
-    id: {
-      type: String,
-      index: true,
-      unique: true,
-    },
-    name: String,
-    company: String,
-    description: String,
-    city: Object,
-    minGamer: String,
-    maxGamer: String,
-    duration: String,
-    minPrice: String,
-    maxPrice: String,
-    bookingUrl: String,
-    audienceAge: String,
-    comingSoon: String,
-    viewed: String,
-    isCombatMode: String,
-    combatText: String,
-    equalRoom: String,
-    videos: String,
-    categories: mongoose.SchemaTypes.Mixed,
-    audience: mongoose.SchemaTypes.Mixed,
-    themes: mongoose.SchemaTypes.Mixed,
-    files: mongoose.SchemaTypes.Mixed,
-    comments: mongoose.SchemaTypes.Mixed,
-    wideImage: Object,
-    narrowImage: Object,
-    reviewCount: String,
-  },
-  { _id: true, versionKey: false },
-);
+export type GameDocument = Game & Document;
 
-GameSchema.virtual('_company', {
-  ref: 'company',
-  localField: 'company',
-  foreignField: 'id',
-  justOne: true,
-});
+@Schema({ _id: true, versionKey: false })
+export class Game {
+  @Prop({ required: true, unique: true })
+  id: string;
+  name: string;
+  company: string;
+  description: string;
+  city: Record<string, unknown>;
+  minGamer: string;
+  maxGamer: string;
+  duration: string;
+  minPrice: string;
+  maxPrice: string;
+  bookingUrl: string;
+  audienceAge: string;
+  comingSoon: string;
+  viewed: string;
+  isCombatMode: string;
+  combatText: string;
+  equalRoom: string;
+  videos: string;
+  categories: any;
+  audience: any;
+  themes: any;
+  files: any;
+  comments: any;
+  wideImage: Record<string, unknown>;
+  narrowImage: Record<string, unknown>;
+  reviewCount: string;
+}
+
+export const GameSchema = SchemaFactory.createForClass(Game);
+
+// GameSchema.virtual('_company', {
+//   ref: 'company',
+//   localField: 'company',
+//   foreignField: 'id',
+//   justOne: true,
+// });

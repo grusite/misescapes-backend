@@ -4,12 +4,12 @@ import { MongooseModule } from '@nestjs/mongoose';
 
 import { CompaniesController } from './companies.controller';
 import { CompaniesService } from './companies.service';
-import { CompanySchema } from './schemas/company.schema';
+import { Company, CompanySchema } from './schemas/company.schema';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    MongooseModule.forFeature([{ name: 'Companies', schema: CompanySchema }]),
+    MongooseModule.forFeature([{ name: Company.name, schema: CompanySchema }]),
   ],
   controllers: [CompaniesController],
   providers: [CompaniesService],

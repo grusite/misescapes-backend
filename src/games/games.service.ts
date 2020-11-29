@@ -4,11 +4,13 @@ import { Model } from 'mongoose';
 
 import { GameDto } from './dto/game.dto';
 // import { CreateGameDto } from './dto/createGame.dto';
-import { Game } from './interfaces/game.interface';
+import { Game, GameDocument } from './schemas/game.schema';
 
 @Injectable()
 export class GamesService {
-  constructor(@InjectModel('Games') private gamesModel: Model<Game>) {}
+  constructor(
+    @InjectModel(Game.name) private gamesModel: Model<GameDocument>,
+  ) {}
 
   async findAll(): Promise<GameDto[]> {
     return await this.gamesModel.find().exec();

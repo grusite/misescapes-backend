@@ -1,36 +1,37 @@
-import * as mongoose from 'mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
 
-export const CompanySchema = new mongoose.Schema(
-  {
-    id: {
-      type: String,
-      index: true,
-      unique: true,
-    },
-    name: String,
-    webPage: String,
-    latitude: String,
-    longitude: String,
-    email: String,
-    phone: String,
-    address: String,
-    tripAdvisor: String,
-    facebook: String,
-    localNumber: String,
-    googleMapLink: String,
-    opinionCount: String,
-    rating: String,
-    metro: Object,
-    city: Object,
-    image: Object,
-    rank: String,
-    games: [String],
-  },
-  { _id: true, versionKey: false },
-);
+export type CompanyDocument = Company & Document;
 
-CompanySchema.virtual('_games', {
-  ref: 'game',
-  localField: 'games',
-  foreignField: 'id',
-});
+@Schema({ _id: true, versionKey: false })
+export class Company {
+  @Prop({ required: true, unique: true })
+  id: string;
+  name: string;
+  webPage: string;
+  latitude: string;
+  longitude: string;
+  email: string;
+  phone: string;
+  address: string;
+  tripAdvisor: string;
+  facebook: string;
+  localNumber: string;
+  googleMapLink: string;
+  opinionCount: string;
+  rating: string;
+  metro: Record<string, unknown>;
+  city: Record<string, unknown>;
+  image: Record<string, unknown>;
+  rank: string;
+  @Prop([String])
+  games: string[];
+}
+
+export const CompanySchema = SchemaFactory.createForClass(Company);
+
+// CompanySchema.virtual('_games', {
+//   ref: 'game',
+//   localField: 'games',
+//   foreignField: 'id',
+// });
