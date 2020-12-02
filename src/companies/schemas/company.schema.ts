@@ -30,8 +30,8 @@ export class Company {
 
 export const CompanySchema = SchemaFactory.createForClass(Company);
 
-// CompanySchema.virtual('_games', {
-//   ref: 'game',
-//   localField: 'games',
-//   foreignField: 'id',
-// });
+CompanySchema.virtual('_games', {
+  ref: 'game',
+  localField: 'games',
+  foreignField: 'id',
+});

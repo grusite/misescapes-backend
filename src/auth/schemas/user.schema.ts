@@ -14,9 +14,26 @@ export class User {
 
   @Prop({ required: true })
   password: string;
+
+  @Prop({ type: Date, required: false })
+  createdAt?: Date;
+
+  @Prop({ type: Date, required: false })
+  updatedAt?: number;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
+
+// UserSchema.pre('save', function(next) {
+//   this.email = this.email.toLowerCase(); // ensure email are in lowercase
+
+//   var currentDate = new Date().getTime();
+//   this.updatedAt = currentDate;
+//   if (!this.created_at) {
+//     this.createdAt = currentDate;
+//   }
+//   next();
+// });
 
 // UserSchema.pre('save', function(next) {
 //   let user = this;
@@ -36,11 +53,11 @@ export const UserSchema = SchemaFactory.createForClass(User);
 //   });
 // });
 
-// UserSchema.methods.checkPassword = function(attempt, callback) {
-//   let user = this;
+UserSchema.methods.checkPassword = function(attempt, callback) {
+  let user = this;
 
-//   bcrypt.compare(attempt, user.password, (err, isMatch) => {
-//     if (err) return callback(err);
-//     callback(null, isMatch);
-//   });
-// };
+  bcrypt.compare(attempt, user.password, (err, isMatch) => {
+    if (err) return callback(err);
+    callback(null, isMatch);
+  });
+};
