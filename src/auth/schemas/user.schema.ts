@@ -15,49 +15,11 @@ export class User {
   @Prop({ required: true })
   password: string;
 
-  @Prop({ type: Date, required: false })
-  createdAt?: Date;
-
-  @Prop({ type: Date, required: false })
-  updatedAt?: number;
+  comparePassword: Function;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
 
-// UserSchema.pre('save', function(next) {
-//   this.email = this.email.toLowerCase(); // ensure email are in lowercase
-
-//   var currentDate = new Date().getTime();
-//   this.updatedAt = currentDate;
-//   if (!this.created_at) {
-//     this.createdAt = currentDate;
-//   }
-//   next();
-// });
-
-// UserSchema.pre('save', function(next) {
-//   let user = this;
-
-//   // Make sure not to rehash the password if it is already hashed
-//   if (!user.isModified('password')) return next();
-
-//   // Generate a salt and use it to hash the user's password
-//   bcrypt.genSalt(10, (err, salt) => {
-//     if (err) return next(err);
-
-//     bcrypt.hash(user.password, salt, (err, hash) => {
-//       if (err) return next(err);
-//       user.password = hash;
-//       next();
-//     });
-//   });
-// });
-
-UserSchema.methods.checkPassword = function(attempt, callback) {
-  let user = this;
-
-  bcrypt.compare(attempt, user.password, (err, isMatch) => {
-    if (err) return callback(err);
-    callback(null, isMatch);
-  });
+UserSchema.methods.comparePassword = function(candidatePassword) {
+  return bcrypt.compare(candidatePassword, this.password);
 };

@@ -1,4 +1,8 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import * as bcrypt from 'bcrypt';
@@ -16,8 +20,7 @@ export class AuthService {
 
   async signUp(authCreateUserDto: AuthCreateUserDto): Promise<void> {
     const { email, name, password } = authCreateUserDto;
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new this.userModel({ email, name, password: hashedPassword });
+    const user = new this.userModel({ email, name, password });
     try {
       await user.save();
     } catch (error) {
@@ -37,13 +40,14 @@ export class AuthService {
 
   async validateUser(email: string, pass: string): Promise<UserDocument> {
     const user = await this.userModel.findOne({ email });
+
     if (!user) {
-      return null;
+      throw new ForbiddenException('User not registered');
     }
-    const valid = await bcrypt.compare(pass, user.password);
-    if (valid) {
-      return user;
+
+    if (!(await user.comparePassword(pass))) {
+      throw new ForbiddenException('Invalid password');
     }
-    return null;
+    return user;
   }
 }
