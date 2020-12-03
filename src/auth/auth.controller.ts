@@ -1,7 +1,6 @@
 import {
   Body,
   Controller,
-  Res,
   Get,
   BadRequestException,
   Post,
@@ -9,7 +8,7 @@ import {
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
-import { ApiResponse, ApiTags, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiResponse, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 
 import { AuthService } from './auth.service';
 import { CreateUserDto } from '../users/dto/createUser.dto';
@@ -27,7 +26,7 @@ export class AuthController {
 
   @ApiResponse({ status: 201 })
   @Post('/signup')
-  async signUp(
+  public async signUp(
     @Body(ValidationPipe) createUserDto: CreateUserDto,
   ): Promise<SignupStatus> {
     const result: SignupStatus = await this.authService.signUp(createUserDto);
@@ -41,7 +40,9 @@ export class AuthController {
 
   // @UseGuards(LocalAuthGuard)
   @Post('signin')
-  async signIn(@Body() loginUserDto: LoginUserDto): Promise<LoginStatus> {
+  public async signIn(
+    @Body() loginUserDto: LoginUserDto,
+  ): Promise<LoginStatus> {
     return this.authService.signIn(loginUserDto);
   }
 
@@ -49,7 +50,7 @@ export class AuthController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Get('me')
-  getMe(@Request() req) {
+  public async getMe(@Request() req: any): Promise<JwtPayload> {
     return req.user;
   }
 }
