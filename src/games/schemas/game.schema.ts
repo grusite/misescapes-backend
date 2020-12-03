@@ -3,7 +3,7 @@ import { Document } from 'mongoose';
 
 export type GameDocument = Game & Document;
 
-@Schema({ _id: true, versionKey: false })
+@Schema({ _id: true, versionKey: false, toJSON: { virtuals: true } })
 export class Game {
   @Prop({ required: true, unique: true })
   id: string;
@@ -35,10 +35,3 @@ export class Game {
 }
 
 export const GameSchema = SchemaFactory.createForClass(Game);
-
-// GameSchema.virtual('_company', {
-//   ref: 'company',
-//   localField: 'company',
-//   foreignField: 'id',
-//   justOne: true,
-// });

@@ -20,6 +20,6 @@ export class User {
 
 export const UserSchema = SchemaFactory.createForClass(User);
 
-UserSchema.methods.comparePassword = function(candidatePassword) {
+UserSchema.methods.comparePassword = function(candidatePassword: string) {
   return bcrypt.compare(candidatePassword, this.password);
 };
