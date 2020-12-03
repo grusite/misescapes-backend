@@ -3,7 +3,7 @@ import {
   Controller,
   Res,
   Get,
-  HttpStatus,
+  BadRequestException,
   Post,
   Request,
   UseGuards,
@@ -12,10 +12,13 @@ import {
 import { ApiResponse, ApiTags, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
 
 import { AuthService } from './auth.service';
-import { AuthCreateUserDto } from './dto/authCreateUser.dto';
-import { AuthLoginUserDto } from './dto/authLoginUser.dto';
+import { CreateUserDto } from '../users/dto/createUser.dto';
+import { LoginUserDto } from '../users/dto/loginUser.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
-import { LocalAuthGuard } from './guards/local-auth.guard';
+import { JwtPayload } from './interfaces/payload.interface';
+import { SignupStatus } from './interfaces/signupStatus.interface';
+import { LoginStatus } from './interfaces/loginStatus.interface';
+// import { LocalAuthGuard } from './guards/local-auth.guard';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -25,20 +28,21 @@ export class AuthController {
   @ApiResponse({ status: 201 })
   @Post('/signup')
   async signUp(
-    @Body(ValidationPipe) authCreateUserDto: AuthCreateUserDto,
-    @Res() res,
-  ): Promise<void> {
-    await this.authService.signUp(authCreateUserDto);
-    return res.status(HttpStatus.OK).json({
-      message: 'Registered OK',
-    });
+    @Body(ValidationPipe) createUserDto: CreateUserDto,
+  ): Promise<SignupStatus> {
+    const result: SignupStatus = await this.authService.signUp(createUserDto);
+
+    if (!result.success) {
+      throw new BadRequestException(result.message);
+    }
+
+    return result;
   }
 
-  @ApiBody({ type: AuthLoginUserDto })
-  @UseGuards(LocalAuthGuard)
+  // @UseGuards(LocalAuthGuard)
   @Post('signin')
-  async signIn(@Request() req) {
-    return this.authService.signIn(req.user);
+  async signIn(@Body() loginUserDto: LoginUserDto): Promise<LoginStatus> {
+    return this.authService.signIn(loginUserDto);
   }
 
   @ApiResponse({ status: 200 })

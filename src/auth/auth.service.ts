@@ -1,53 +1,68 @@
-import {
-  ConflictException,
-  ForbiddenException,
-  Injectable,
-} from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { InjectModel } from '@nestjs/mongoose';
-import * as bcrypt from 'bcrypt';
-import { Model } from 'mongoose';
 
-import { AuthCreateUserDto } from './dto/authCreateUser.dto';
-import { User, UserDocument } from './schemas/user.schema';
+import { CreateUserDto } from '../users/dto/createUser.dto';
+import { LoginUserDto } from '../users/dto/loginUser.dto';
+import { UserDto } from '../users/dto/user.dto';
+import { JwtPayload } from './interfaces/payload.interface';
+import { SignupStatus } from './interfaces/signupStatus.interface';
+import { LoginStatus } from './interfaces/loginStatus.interface';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectModel(User.name) private userModel: Model<UserDocument>,
+    private readonly usersService: UsersService,
     private jwtService: JwtService,
   ) {}
 
-  async signUp(authCreateUserDto: AuthCreateUserDto): Promise<void> {
-    const { email, name, password } = authCreateUserDto;
-    const user = new this.userModel({ email, name, password });
+  async signUp(createUserDto: CreateUserDto): Promise<SignupStatus> {
+    let status: SignupStatus = {
+      success: true,
+      message: 'user registered',
+    };
+
     try {
-      await user.save();
-    } catch (error) {
-      if (error.code === 11000) {
-        throw new ConflictException('User already exists');
-      }
-      throw error;
+      await this.usersService.create(createUserDto);
+    } catch (err) {
+      status = {
+        success: false,
+        message: err,
+      };
     }
+
+    return status;
   }
 
-  async signIn(user: UserDocument) {
-    const payload = { email: user.email, sub: user._id };
+  async signIn(loginUserDto: LoginUserDto): Promise<LoginStatus> {
+    // find user in db
+    const user = await this.usersService.findByLogin(loginUserDto);
+
+    // generate and sign token
+    const token = this._createToken(user);
+
     return {
-      accessToken: this.jwtService.sign(payload),
+      email: user.email,
+      ...token,
     };
   }
 
-  async validateUser(email: string, pass: string): Promise<UserDocument> {
-    const user = await this.userModel.findOne({ email });
-
+  async validateUser(payload: JwtPayload): Promise<UserDto> {
+    const user = await this.usersService.findByPayload(payload);
     if (!user) {
-      throw new ForbiddenException('User not registered');
-    }
-
-    if (!(await user.comparePassword(pass))) {
-      throw new ForbiddenException('Invalid password');
+      throw new UnauthorizedException('Invalid token');
     }
     return user;
+  }
+
+  private _createToken({ id, email }: UserDto): any {
+    const expiresIn = process.env.EXPIRESIN;
+
+    const userPayload: JwtPayload = { id, email };
+    const accessToken = this.jwtService.sign(userPayload);
+    return {
+      expiresIn,
+      accessToken,
+    };
   }
 }
