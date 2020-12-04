@@ -12,4 +12,6 @@ export class UserDto {
   email: string;
 
   createdAt?: Date;
+
+  updatedAt?: Date;
 }

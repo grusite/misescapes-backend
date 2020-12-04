@@ -34,8 +34,8 @@ export class UsersService {
     return toUserDto(user);
   }
 
-  async findByPayload({ email }: any): Promise<UserDto> {
-    return await this.findOne({ email });
+  async findByPayload({ id, email }: any): Promise<UserDto> {
+    return await this.findOne({ _id: id, email });
   }
 
   async create(createUserDto: CreateUserDto): Promise<UserDto> {
