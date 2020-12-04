@@ -17,18 +17,15 @@ export class AuthService {
   ) {}
 
   async signUp(createUserDto: CreateUserDto): Promise<SignupStatus> {
-    let status: SignupStatus = {
+    const status: SignupStatus = {
       success: true,
-      message: 'user registered',
+      message: 'user registered successfuly',
     };
 
     try {
       await this.usersService.create(createUserDto);
     } catch (err) {
-      status = {
-        success: false,
-        message: err,
-      };
+      throw err;
     }
 
     return status;

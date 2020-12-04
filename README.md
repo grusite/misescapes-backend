@@ -49,7 +49,7 @@ $ npm run start:prod
 
 ## Running the server
 
-There is a docker-compose that starts the db automaticaly in your host. IMP: You need docker installed.
+There is a docker-compose that starts the db automaticaly in your host. IMP: You need docker installed and mongo image installed.
 
 ```bash
 # up
@@ -67,7 +67,7 @@ $ npm run down:db
 I modified the Edu's script to load the data downloaded into the db. The only thing not working is the company/all (it's encoded I think) the rest is working OK.
 
 1 - Unzip data/db/companies.json from sample.tar.gz into bin/recover
-2 - Unzip data/game from sample.tar.gz into bin/recover
+2 - Unzip data/game from sample.tar.gz into bin/recover (and renamed it to 'games')
 3 - Execute `node ./bin/recover/index.js`
 
 ## Test

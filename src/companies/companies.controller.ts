@@ -6,7 +6,7 @@ import {
   NotFoundException,
   Get,
 } from '@nestjs/common';
-import { ApiResponse, ApiTags, ApiBody } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 
 import { CompaniesService } from './companies.service';
 
@@ -17,14 +17,14 @@ export class CompaniesController {
 
   @Get('all')
   async findAll(@Res() res) {
-    const lists = await this.companiesService.findAll();
-    return res.status(HttpStatus.OK).json(lists);
+    const companies = await this.companiesService.findAll();
+    return res.status(HttpStatus.OK).json(companies);
   }
 
   @Get(':id')
   async findById(@Res() res, @Param('id') id: string) {
-    const lists = await this.companiesService.findById(id);
-    if (!lists) throw new NotFoundException('Id does not exist!');
-    return res.status(HttpStatus.OK).json(lists);
+    const company = await this.companiesService.findById(id);
+    if (!company) throw new NotFoundException('Id does not exist!');
+    return res.status(HttpStatus.OK).json(company);
   }
 }
