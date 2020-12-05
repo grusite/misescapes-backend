@@ -4,7 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from '../users/dto/createUser.dto';
 import { LoginUserDto } from '../users/dto/loginUser.dto';
 import { UserDto } from '../users/dto/user.dto';
-import { JwtPayload } from './interfaces/payload.interface';
+import { JwtPayload } from './interfaces/JwtPayload.interface';
 import { SignupStatus } from './interfaces/signupStatus.interface';
 import { LoginStatus } from './interfaces/loginStatus.interface';
 import { UsersService } from '../users/users.service';
@@ -31,17 +31,24 @@ export class AuthService {
     return status;
   }
 
-  async signIn(loginUserDto: LoginUserDto): Promise<LoginStatus> {
-    const user = await this.usersService.findByLogin(loginUserDto);
-    const token = this._createToken(user);
+  async signIn(userDto: UserDto): Promise<LoginStatus> {
+    const token = this._createToken(userDto);
 
     return {
-      email: user.email,
+      email: userDto.email,
       ...token,
     };
   }
 
-  async validateUser(payload: JwtPayload): Promise<UserDto> {
+  async validateUserByLogin(loginUserDto: LoginUserDto): Promise<UserDto> {
+    const user = await this.usersService.findByLogin(loginUserDto);
+    if (!user) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+    return user;
+  }
+
+  async validateUserByPayload(payload: JwtPayload): Promise<UserDto> {
     const user = await this.usersService.findByPayload(payload);
     if (!user) {
       throw new UnauthorizedException('Invalid token');

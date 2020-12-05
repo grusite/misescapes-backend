@@ -14,10 +14,10 @@ import { AuthService } from './auth.service';
 import { CreateUserDto } from '../users/dto/createUser.dto';
 import { LoginUserDto } from '../users/dto/loginUser.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
-import { JwtPayload } from './interfaces/payload.interface';
+import { JwtPayload } from './interfaces/JwtPayload.interface';
 import { SignupStatus } from './interfaces/signupStatus.interface';
 import { LoginStatus } from './interfaces/loginStatus.interface';
-// import { LocalAuthGuard } from './guards/local-auth.guard';
+import { LocalAuthGuard } from './guards/local-auth.guard';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -38,12 +38,13 @@ export class AuthController {
     return result;
   }
 
-  // @UseGuards(LocalAuthGuard)
+  @UseGuards(LocalAuthGuard)
   @Post('signin')
   public async signIn(
     @Body() loginUserDto: LoginUserDto,
+    @Request() req,
   ): Promise<LoginStatus> {
-    return this.authService.signIn(loginUserDto);
+    return this.authService.signIn(req.user);
   }
 
   @ApiResponse({ status: 200 })
