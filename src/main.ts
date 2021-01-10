@@ -7,6 +7,7 @@ import { AppModule } from './app.module';
 const port = process.env.PORT;
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.setGlobalPrefix('api/v1');
 
   app.enableCors();
 
@@ -23,6 +24,9 @@ async function bootstrap() {
 
   await app.listen(port);
 
-  Logger.log(`Server started running on http://localhost:${port}`, 'Bootstrap');
+  Logger.log(
+    `Server started running on http://localhost:${port}/api/v1`,
+    'Bootstrap',
+  );
 }
 bootstrap();
