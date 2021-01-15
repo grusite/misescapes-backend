@@ -35,9 +35,7 @@ export class AuthService {
     const token = this._createToken(userDto);
 
     return {
-      user: {
-        email: userDto.email,
-      },
+      email: userDto.email,
       ...token,
     };
   }
